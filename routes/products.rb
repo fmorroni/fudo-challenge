@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-require 'rack'
 require 'json'
+require 'rack'
+
+require_relative '../lib/api_errors'
 require_relative '../models/product'
 
 # :nodoc:
@@ -20,7 +22,7 @@ class ProductsRoute
     when 'GET'
       get(req)
     else
-      Rack::Response.new('Method Not Allowed', 405, { 'Content-Type' => 'text/plain' }).finish
+      raise ApiError.new(code: :method_not_allowed)
     end
   end
 
@@ -28,7 +30,6 @@ class ProductsRoute
   # @return [Array]
   def post(req)
     product = @store.add_product(name: req.params['name'])
-    pp product
     Rack::Response.new(
       product.to_json,
       200,
@@ -40,23 +41,14 @@ class ProductsRoute
   # @return [Array]
   def get(req)
     offset = req.params['offset'].to_i
-    limit  = req.params['limit']&.to_i || 10
+    limit = req.params['limit']&.to_i || 10
 
-    if limit > 100
-      return Rack::Response.new(
-        { error: 'limit cannot exceed 100' }.to_json, 400, { 'Content-Type' => 'application/json' }
-      ).finish
-    end
+    raise ApiError.new(code: :invalid_limit) if limit > 100
 
-    @store.list_products(offset, limit)
+    products = @store.list_products(offset, limit)
 
     Rack::Response.new(
-      {
-        count: @store.products_count,
-        offset: offset,
-        limit: limit,
-        data: @store.list_products(offset, limit)
-      }.to_json,
+      { count: @store.products_count, offset:, limit:, data: products }.to_json,
       200,
       { 'Content-Type' => 'application/json' }
     ).finish
