@@ -34,7 +34,7 @@ class ProductsService
 
   # @param name [String]
   def validate_name!(name)
-    return if name.match?(/\A\p{Lu}\w*\z/)
+    return if name.match?(/\A[a-zA-Z]\w*\z/)
 
     raise InvalidProductNameError, 'Product name must start with an uppercase letter and contain only word characters'
   end
