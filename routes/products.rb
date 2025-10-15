@@ -28,6 +28,8 @@ class ProductsRoute
     end
   end
 
+  private
+
   # @param req [Rack::Request]
   # @return [Array]
   def add_product(req)
