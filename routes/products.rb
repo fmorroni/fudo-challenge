@@ -16,6 +16,8 @@ class ProductsRoute
   def call(env)
     req = Rack::Request.new(env)
 
+    raise ApiError.new(code: :not_found) if req.path_info != '' && req.path_info != '/'
+
     case req.request_method
     when 'POST'
       add_product(req)
