@@ -31,6 +31,8 @@ class ProductsRoute
   # @param req [Rack::Request]
   # @return [Array]
   def add_product(req)
+    raise ApiError.new(code: :invalid_params), 'Missing product name' unless req.params['name']
+
     product = @store.add_product(name: req.params['name'])
     Rack::Response.new(
       product.to_json,
