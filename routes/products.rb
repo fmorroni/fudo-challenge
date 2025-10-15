@@ -5,12 +5,13 @@ require 'rack'
 
 require_relative '../lib/api_errors'
 require_relative '../models/product'
+require_relative '../services/products'
 
 # :nodoc:
 class ProductsRoute
-  # @param store [MemoryStorage]
-  def initialize(store)
-    @store = store
+  # @param service [ProductsService]
+  def initialize(service)
+    @service = service
   end
 
   def call(env)
@@ -33,9 +34,10 @@ class ProductsRoute
   # @param req [Rack::Request]
   # @return [Array]
   def add_product(req)
-    raise ApiError.new(code: :invalid_params), 'Missing product name' unless req.params['name']
+    name = req.params['name']
+    raise ApiError.new(code: :invalid_params), 'Missing product name' unless name
 
-    product = @store.add_product(name: req.params['name'])
+    product = @service.create_product(name)
     Rack::Response.new(
       product.to_json,
       200,
@@ -49,12 +51,10 @@ class ProductsRoute
     offset = req.params['offset'].to_i
     limit = req.params['limit']&.to_i || 10
 
-    raise ApiError.new(code: :invalid_limit) if limit > 100
-
-    products = @store.get_products(offset, limit)
+    products_and_total = @service.get_products(offset, limit)
 
     Rack::Response.new(
-      { count: @store.products_count, offset:, limit:, data: products }.to_json,
+      { offset:, limit:, **products_and_total }.to_json,
       200,
       { 'Content-Type' => 'application/json' }
     ).finish

@@ -9,12 +9,12 @@ class MemoryStorage
     @products = []
   end
 
-  # @param name [String]
+  # @param product [Product]
   # @return [Product]
-  def add_product(name)
-    product = Product.new(@next_id, name)
-    @products << product
+  def add_product(product)
+    product.id = @next_id
     @next_id += 1
+    @products << product
     product
   end
 

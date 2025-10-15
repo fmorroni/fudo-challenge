@@ -4,12 +4,12 @@ require 'json'
 
 # :nodoc:
 class Product
-  attr_reader :id, :name
+  attr_accessor :id, :name
 
-  # @param id [Integer]
   # @param name [String]
-  def initialize(id, name)
-    @id = id
+  def initialize(name)
+    # @type [Integer]
+    @id = nil
     @name = name
   end
 

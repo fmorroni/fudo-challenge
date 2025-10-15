@@ -8,7 +8,6 @@ class ApiError < StandardError
   attr_reader :code, :http_status
 
   CODES = {
-    invalid_limit: { http_status: 400, message: 'Limit cannot exceed 100' },
     invalid_params: { http_status: 400, message: 'Missing or invalid parameters' },
     unauthorized: { http_status: 401, message: 'Unauthorized' },
     not_found: { http_status: 404, message: 'Resource not found' },
@@ -16,6 +15,8 @@ class ApiError < StandardError
     internal_error: { http_status: 500, message: 'Internal server error' }
   }.freeze
 
+  # @param message [String]
+  # @param code [Symbol]
   def initialize(message = nil, code:)
     raise ArgumentError, "Invalid ApiError code: #{code.inspect}" unless CODES.key?(code)
 

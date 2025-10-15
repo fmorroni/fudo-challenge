@@ -14,5 +14,7 @@ class ErrorHandler
     @app.call(env)
   rescue ApiError => e
     e.to_response
+  rescue InvalidProductNameError, InvalidRange => e
+    ApiError.new(e.message, code: :invalid_params).to_response
   end
 end
