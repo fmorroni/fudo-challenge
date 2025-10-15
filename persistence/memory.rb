@@ -21,7 +21,7 @@ class MemoryStorage
   # @param offset [Integer]
   # @param count [Integer]
   # @return [Array<Product>]
-  def list_products(offset, limit)
+  def get_products(offset, limit)
     @products[offset, limit] || []
   end
 
