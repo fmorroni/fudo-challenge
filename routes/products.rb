@@ -43,7 +43,9 @@ class ProductsRoute
 
     @products_service.create_product(name)
     Rack::Response.new(
-      'The product is being created',
+      {
+        message: 'The product is being created'
+      }.to_json,
       202,
       { 'Content-Type' => 'application/json' }
     ).finish
