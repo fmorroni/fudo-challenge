@@ -17,6 +17,6 @@ class AuthService
     raise AuthError, 'Invalid token' unless authorization&.start_with?('Bearer ')
 
     token = authorization.split(' ').last
-    JwtHelper.decode(token, type: :access)
+    JwtHelper.decode(token)
   end
 end

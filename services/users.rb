@@ -33,8 +33,7 @@ class UsersService
     raise AuthError, 'Invalid password' unless BCrypt::Password.new(user.password) == password
 
     {
-      access_token: JwtHelper.encode({ user: username }, type: :access),
-      refresh_token: JwtHelper.encode({ user: username }, type: :refresh)
+      access_token: JwtHelper.encode({ user: username })
     }
   end
 

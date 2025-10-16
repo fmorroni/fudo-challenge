@@ -14,8 +14,7 @@ class AuthRoute
     @service = service
     @routes = {
       '/register' => { 'POST' => method(:register) },
-      '/login' => { 'POST' => method(:login) },
-      '/refresh' => { 'POST' => method(:refresh) }
+      '/login' => { 'POST' => method(:login) }
     }
   end
 
@@ -69,8 +68,4 @@ class AuthRoute
       { 'Content-Type' => 'application/json' }
     ).finish
   end
-
-  # @param req [Rack::Request]
-  # @return [Array]
-  def refresh(req); end
 end
