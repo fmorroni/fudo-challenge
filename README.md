@@ -1,4 +1,4 @@
-# Products CRUD API (Ruby + Rack)
+# Products API (Ruby + Rack)
 
 This project was built for the **Fudo Challenge**.
 
