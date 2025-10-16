@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../lib/service_errors'
 require_relative '../models/product'
 
 # :nodoc:
@@ -39,6 +40,3 @@ class ProductsService
     raise InvalidProductNameError, 'Product name must start with an uppercase letter and contain only word characters'
   end
 end
-
-class InvalidProductNameError < StandardError; end
-class InvalidRange < StandardError; end

@@ -5,13 +5,16 @@ require 'rack'
 
 require_relative '../lib/api_errors'
 require_relative '../models/product'
+require_relative '../services/auth'
 require_relative '../services/products'
 
 # :nodoc:
 class ProductsRoute
-  # @param service [ProductsService]
-  def initialize(service)
-    @service = service
+  # @param products_service [ProductsService]
+  # @param auth_service [AuthService]
+  def initialize(products_service, auth_service)
+    @products_service = products_service
+    @auth_service = auth_service
   end
 
   def call(env)
@@ -34,10 +37,11 @@ class ProductsRoute
   # @param req [Rack::Request]
   # @return [Array]
   def add_product(req)
+    @auth_service.verify_access_token(req.get_header('HTTP_AUTHORIZATION'))
     name = req.params['name']
     raise ApiError.new(code: :invalid_params), 'Missing product name' unless name
 
-    product = @service.create_product(name)
+    product = @products_service.create_product(name)
     Rack::Response.new(
       product.to_json,
       200,
@@ -48,10 +52,11 @@ class ProductsRoute
   # @param req [Rack::Request]
   # @return [Array]
   def get_products(req)
+    @auth_service.verify_access_token(req.get_header('HTTP_AUTHORIZATION'))
     offset = req.params['offset'].to_i
     limit = req.params['limit']&.to_i || 10
 
-    products_and_total = @service.get_products(offset, limit)
+    products_and_total = @products_service.get_products(offset, limit)
 
     Rack::Response.new(
       { offset:, limit:, **products_and_total }.to_json,

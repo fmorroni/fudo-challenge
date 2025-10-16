@@ -3,6 +3,7 @@
 require 'rack'
 
 require_relative '../lib/api_errors'
+require_relative '../lib/service_errors'
 
 # :nodoc:
 class ErrorHandler
@@ -16,5 +17,7 @@ class ErrorHandler
     e.to_response
   rescue InvalidProductNameError, InvalidRange => e
     ApiError.new(e.message, code: :invalid_params).to_response
+  rescue AuthError, InvalidTokenError => e
+    ApiError.new(e.message, code: :unauthorized).to_response
   end
 end
