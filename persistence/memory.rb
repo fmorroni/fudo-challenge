@@ -37,6 +37,16 @@ class MemoryStorage
     product
   end
 
+  # @param product [Product]
+  def add_product_with_id(product)
+    raise StandardError, 'Invalid product id' if product.id < @next_id
+
+    @products << product
+    @next_id = product.id + 1
+
+    product
+  end
+
   # @param offset [Integer]
   # @param count [Integer]
   # @return [Array<Product>]

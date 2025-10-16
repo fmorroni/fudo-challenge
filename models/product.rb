@@ -7,9 +7,9 @@ class Product
   attr_accessor :id, :name
 
   # @param name [String]
-  def initialize(name)
+  def initialize(name, id = nil)
     # @type [Integer]
-    @id = nil
+    @id = id
     @name = name
   end
 

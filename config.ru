@@ -12,15 +12,20 @@ require_relative 'services/products'
 require_relative 'services/users'
 
 store = MemoryStorage.new
+users_service = UsersService.new(store)
+products_service = ProductsService.new(store)
+auth_service = AuthService.new(store)
+
+products_service.sync_with_external_api
 
 use ErrorHandler
 use StripTrailingSlash
 
 map '/auth' do
-  run AuthRoute.new(UsersService.new(store))
+  run AuthRoute.new(users_service)
 end
 
 map '/products' do
   # use Authenticate # maybe?
-  run ProductsRoute.new(ProductsService.new(store), AuthService.new(store))
+  run ProductsRoute.new(products_service, auth_service)
 end

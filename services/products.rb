@@ -1,13 +1,30 @@
 # frozen_string_literal: true
 
+require 'httparty'
+
 require_relative '../lib/service_errors'
 require_relative '../models/product'
 
 # :nodoc:
 class ProductsService
+  EXTERNAL_API = ENV['EXTERNAL_API']
+
   # @param store [MemoryStorage]
   def initialize(store)
     @store = store
+  end
+
+  def sync_with_external_api
+    return if @store.products_count.positive?
+
+    response = HTTParty.get(EXTERNAL_API, headers: { 'Content-Type' => 'application/json' })
+    products = response.parsed_response['data'].map { |p_hash| Product.new(p_hash['name'], p_hash['id']) }
+
+    products.each do |p|
+      @store.add_product_with_id(p)
+    end
+  rescue StandardError => e
+    puts "Failed to syncronize products #{e.message}"
   end
 
   # @param name [String]
