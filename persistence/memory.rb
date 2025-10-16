@@ -30,6 +30,7 @@ class MemoryStorage
   # @param product [Product]
   # @return [Product]
   def add_product(product)
+    sleep 5
     product.id = @next_id
     @next_id += 1
     @products << product

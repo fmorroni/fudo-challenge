@@ -11,11 +11,13 @@ class ProductsService
   end
 
   # @param name [String]
-  # @return [Product]
   def create_product(name)
     validate_name!(name)
     product = Product.new(name)
-    @store.add_product(product)
+    Thread.new do
+      @store.add_product(product)
+    end
+    nil
   end
 
   # @param offset [Integer]

@@ -41,10 +41,10 @@ class ProductsRoute
     name = req.params['name']
     raise ApiError.new(code: :invalid_params), 'Missing product name' unless name
 
-    product = @products_service.create_product(name)
+    @products_service.create_product(name)
     Rack::Response.new(
-      product.to_json,
-      200,
+      'The product is being created',
+      202,
       { 'Content-Type' => 'application/json' }
     ).finish
   end
