@@ -45,7 +45,7 @@ class ProductsService
     raise InvalidRange, 'Limit must be between 0 and 100' if limit.negative? || limit > 100
 
     {
-      products_and_total: @store.get_products(offset, limit),
+      products: @store.get_products(offset, limit),
       total: @store.products_count
     }
   end
